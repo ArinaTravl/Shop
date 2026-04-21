@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Navbar from "../components/Navbar"
+import { AUTH_API } from "../api"
 
 function Auth()
 {
@@ -10,14 +11,16 @@ function Auth()
     async function handleSubmit()
     {
         const url = isLogin
-            ? "http://localhost:5050/api/login"
-            : "http://localhost:5050/api/register"
+            ? `${AUTH_API}/login`
+            : `${AUTH_API}/register`
 
         try
         {
-            const res = await fetch(url, {
+            const res = await fetch(url,
+            {
                 method: "POST",
-                headers: {
+                headers:
+                {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ email, password })
@@ -25,7 +28,7 @@ function Auth()
 
             const data = await res.json()
 
-            if (data.error)
+            if (!res.ok)
             {
                 alert(data.error)
                 return
@@ -33,12 +36,12 @@ function Auth()
 
             localStorage.setItem("user", email)
 
-            alert("Success 🚀")
+            alert(isLogin ? "Login success" : "Register success")
         }
         catch (e)
         {
             console.error(e)
-            alert("Error")
+            alert("Server error")
         }
     }
 
@@ -46,89 +49,29 @@ function Auth()
         <>
             <Navbar />
 
-            <div style={{
-                minHeight: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: "#0b0b0b"
-            }}>
-                <div style={{
-                    width: "350px",
-                    background: "#1a1a1a",
-                    padding: "30px",
-                    borderRadius: "12px",
-                    boxShadow: "0 0 20px rgba(0,0,0,0.5)"
-                }}>
-                    <h2 style={{
-                        color: "white",
-                        marginBottom: "20px",
-                        textAlign: "center"
-                    }}>
-                        {isLogin ? "Login" : "Register"}
-                    </h2>
+            <div style={{ padding: 40, color: "white" }}>
+                <h2>{isLogin ? "Login" : "Register"}</h2>
 
-                    <input
-                        placeholder="Email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            marginBottom: "10px",
-                            background: "#111",
-                            border: "1px solid #333",
-                            borderRadius: "6px",
-                            color: "white"
-                        }}
-                    />
+                <input
+                    placeholder="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                />
 
-                    <input
-                        placeholder="Password"
-                        type="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            marginBottom: "15px",
-                            background: "#111",
-                            border: "1px solid #333",
-                            borderRadius: "6px",
-                            color: "white"
-                        }}
-                    />
+                <input
+                    placeholder="password"
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                />
 
-                    <button
-                        onClick={handleSubmit}
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            background: "#7b5cff",
-                            border: "none",
-                            borderRadius: "8px",
-                            color: "white",
-                            cursor: "pointer",
-                            marginBottom: "10px"
-                        }}
-                    >
-                        {isLogin ? "Login" : "Register"}
-                    </button>
+                <button onClick={handleSubmit}>
+                    Submit
+                </button>
 
-                    <p
-                        onClick={() => setIsLogin(!isLogin)}
-                        style={{
-                            color: "#aaa",
-                            textAlign: "center",
-                            cursor: "pointer",
-                            fontSize: "14px"
-                        }}
-                    >
-                        {isLogin
-                            ? "Don't have an account? Register"
-                            : "Already have an account? Login"}
-                    </p>
-                </div>
+                <p onClick={() => setIsLogin(!isLogin)}>
+                    Switch
+                </p>
             </div>
         </>
     )

@@ -1,6 +1,6 @@
 function Profile()
 {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
+    const user = localStorage.getItem("user")
 
     if (!user)
     {
@@ -8,12 +8,9 @@ function Profile()
     }
 
     return (
-        <div>
-
+        <div style={{ color: "white" }}>
             <h1>Profile</h1>
-
-            <p>Email: {user.email}</p>
-
+            <p>{user}</p>
         </div>
     )
 }

@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  auth-service:
+    build: ./services/auth-serivce
+    ports:
+      - "5051:5051"
+    env_file:
+      - ./services/auth-serivce/.env
+
+  order-service:
+    build: ./services/order-service
+    ports:
+      - "5052:5052"
+    env_file:
+      - ./services/order-service/.env
